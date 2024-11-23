@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/11-23-2024-12-10-11-create-account-table.yaml
+  - include:
+      file: db/changelog/changes/11-23-2024-12-11-11-create-transaction-table.yaml

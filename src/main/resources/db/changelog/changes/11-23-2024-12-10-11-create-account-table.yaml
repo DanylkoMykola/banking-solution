@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 11-23-2024-12-10-11-create-account-table
+      author: Mykola_Danylko
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: account_number
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: owner_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: DECIMAL(19,2)
+                  constraints:
+                    nullable: false
+        - createSequence:
+            sequenceName: account_id_seq
+            startValue: 1
+            incrementBy: 1
+            minValue: 1
+            maxValue: 9223372036854775807
