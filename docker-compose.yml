@@ -23,21 +23,22 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
 
-  liquibase:
-    depends_on:
-      - postgres
-    image: liquibase/liquibase:4.30.0
-    #environment:
-    #  URL: jdbc:postgresql://postgres:5432/banking
-    #  USERNAME: postgres
-    #  PASSWORD: password
-    volumes:
-      - ./src/main/resources/db/changelog:/liquibase/changelog
-    entrypoint:
-      - liquibase
-      - --url=jdbc:postgresql://postgres:5432/banking
-      - --username=postgres
-      - --password=password
-      - --changelog-file=/liquibase/changelog/db.changelog-master.yaml
-      - update
+  #liquibase:
+  #  depends_on:
+  #    - postgres
+  #  image: liquibase/liquibase:4.30.0
+  #  #environment:
+  #  #  URL: jdbc:postgresql://postgres:5432/banking
+  #  #  USERNAME: postgres
+  #  #  PASSWORD: password
+  #  volumes:
+  #    - ./src/main/resources/db/changelog:/liquibase/changelog
+  #    - ./src/main/resources/db/changelog/db.changelog-master.yaml:/liquibase/changelog/db.changelog-master.yaml
+  #  entrypoint:
+  #    - liquibase
+  #    - --url=jdbc:postgresql://postgres:5432/banking
+  #    - --username=postgres
+  #    - --password=password
+  #    - --changelog-file=/liquibase/changelog/db.changelog-master.yaml
+  #    - update
 
