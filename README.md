@@ -55,7 +55,7 @@ To run the tests and generate the JaCoCo report:
 ```
 
 
-## Accessing the JaCoCo Report
+## Accessing the JaCoCo Code Coverage Report
 The JaCoCo report can be accessed at the /jacoco endpoint after running the application.
 URL: http://localhost:8080/test/html/index.html
 
