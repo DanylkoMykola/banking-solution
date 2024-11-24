@@ -57,7 +57,18 @@ To run the tests and generate the JaCoCo report:
 
 ## Accessing the JaCoCo Code Coverage Report
 The JaCoCo report can be accessed at the /jacoco endpoint after running the application.
-URL: http://localhost:8080/test/html/index.html
+#### Using Docker 
+Copy the JaCoCo report from the container to your local machine:  
+```
+docker cp banking-solution-api-1:/app/jacoco-report ./jacoco-report
+```
+Open the HTML report: ./jacoco-report/index.html file in a web browser.
+#### Using Gradle
+Run command to generate Jacoco report
+```
+./gradlew jacocoTestReport
+```
+Report will be generated in {root}/build/reports/tests/test/index.html
 
 ## API Endpoints
 ### OpenAPI Documentation
