@@ -32,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto getAccount(Integer accountNumber) {
+    public AccountDto getAccount(Long accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber)
                 .map(accountMapper::toDto)
                 .orElseThrow(() -> new NotFoundException("Account not found"));

@@ -9,6 +9,6 @@ import java.util.List;
 @Service
 public interface AccountService {
     AccountDto createAccount(AccountDto account) ;
-    AccountDto getAccount(Integer accountNumber);
+    AccountDto getAccount(Long accountNumber);
     List<AccountDto> getAllAccounts();
 }

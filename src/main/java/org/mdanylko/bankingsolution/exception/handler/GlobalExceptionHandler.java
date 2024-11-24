@@ -3,7 +3,9 @@ package org.mdanylko.bankingsolution.exception.handler;
 import org.mdanylko.bankingsolution.exception.InsufficientFoundsException;
 import org.mdanylko.bankingsolution.exception.NotFoundException;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,13 +16,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
@@ -35,7 +37,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InsufficientFoundsException.class)
-    public ResponseEntity<Map<String, Object>>  handleNotFoundExceptions(InsufficientFoundsException ex) {
+    public ResponseEntity<Map<String, Object>> insufficientFoundsException(InsufficientFoundsException ex) {
         logger.warn(ex.getMessage());
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }

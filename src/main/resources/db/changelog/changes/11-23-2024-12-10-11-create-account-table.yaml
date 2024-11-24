@@ -14,7 +14,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: account_number
-                  type: INT
+                  type: BIGINT
                   constraints:
                     nullable: false
               - column:

@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,12 +22,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
+@SequenceGenerator(name = "account_id_seq", sequenceName = "account_id_seq", allocationSize = 1)
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_id_seq")
     private Long Id;
     @Column
-    private Integer accountNumber;
+    private Long accountNumber;
     @Column
     private String ownerName;
     @Column
