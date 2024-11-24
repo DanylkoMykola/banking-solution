@@ -1,6 +1,7 @@
 package org.mdanylko.bankingsolution.service.impl;
 
 import org.mdanylko.bankingsolution.dto.AccountDto;
+import org.mdanylko.bankingsolution.exception.NotFoundException;
 import org.mdanylko.bankingsolution.mapper.AccountMapper;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto getAccount(Integer accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber)
                 .map(accountMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+                .orElseThrow(() -> new NotFoundException("Account not found"));
     }
 
     @Override

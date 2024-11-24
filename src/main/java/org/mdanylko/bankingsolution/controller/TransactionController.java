@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.mdanylko.bankingsolution.dto.AccountDto;
 import org.mdanylko.bankingsolution.dto.TransactionDto;
 import org.mdanylko.bankingsolution.entity.Account;
@@ -35,7 +36,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "404", description = "Account not found")
     })
     @PostMapping("/deposit")
-    public ResponseEntity<TransactionDto> deposit(@RequestBody @Parameter(description = "Deposit details") TransactionDto transactionDto) {
+    public ResponseEntity<TransactionDto> deposit(@Valid @RequestBody @Parameter(description = "Deposit details") TransactionDto transactionDto) {
         transactionService.deposit(transactionDto);
         return ResponseEntity.status(HttpStatus.OK).body(transactionService.deposit(transactionDto));
     }
@@ -47,7 +48,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "400", description = "Insufficient funds")
     })
     @PostMapping("/withdraw")
-    public ResponseEntity<TransactionDto> withdraw(@RequestBody @Parameter(description = "Withdrawal details") TransactionDto transactionDto) {
+    public ResponseEntity<TransactionDto> withdraw(@Valid @RequestBody @Parameter(description = "Withdrawal details") TransactionDto transactionDto) {
         return ResponseEntity.status(HttpStatus.OK).body(transactionService.withdraw(transactionDto));
     }
 
@@ -58,7 +59,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "400", description = "Insufficient funds")
     })
     @PostMapping("/transfer")
-    public ResponseEntity<TransactionDto> transfer(@RequestBody @Parameter(description = "Transfer details") TransactionDto transactionDto) {
+    public ResponseEntity<TransactionDto> transfer(@Valid @RequestBody @Parameter(description = "Transfer details") TransactionDto transactionDto) {
         return ResponseEntity.status(HttpStatus.OK).body(transactionService.transfer(transactionDto));
     }
 }

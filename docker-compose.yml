@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: banking
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+    networks:
+      - banking-net
 
   api:
     build:
@@ -22,23 +24,21 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/banking
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - banking-net
 
-  #liquibase:
-  #  depends_on:
-  #    - postgres
-  #  image: liquibase/liquibase:4.30.0
-  #  #environment:
-  #  #  URL: jdbc:postgresql://postgres:5432/banking
-  #  #  USERNAME: postgres
-  #  #  PASSWORD: password
-  #  volumes:
-  #    - ./src/main/resources/db/changelog:/liquibase/changelog
-  #    - ./src/main/resources/db/changelog/db.changelog-master.yaml:/liquibase/changelog/db.changelog-master.yaml
-  #  entrypoint:
-  #    - liquibase
-  #    - --url=jdbc:postgresql://postgres:5432/banking
-  #    - --username=postgres
-  #    - --password=password
-  #    - --changelog-file=/liquibase/changelog/db.changelog-master.yaml
-  #    - update
+  liquibase:
+    image: liquibase/liquibase
+    container_name: liquibase
+    environment:
+      LIQUIBASE_URL: jdbc:postgresql://postgres:5432/banking
+      LIQUIBASE_USERNAME: your_username
+      LIQUIBASE_PASSWORD: your_password
+      LIQUIBASE_CHANGELOG_FILE: /liquibase/changelog/changelog-master.yaml
+    networks:
+      - banking-net
+    volumes:
+      - ./src/main/resources/db/changelog:/liquibase/changelog
+networks:
+  banking-net:
 

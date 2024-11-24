@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.mdanylko.bankingsolution.dto.AccountDto;
 import org.mdanylko.bankingsolution.entity.Account;
 import org.mdanylko.bankingsolution.service.AccountService;
@@ -35,7 +36,7 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @PostMapping
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
+    public ResponseEntity<AccountDto> createAccount(@Valid @RequestBody AccountDto accountDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(accountDto));
     }
 
