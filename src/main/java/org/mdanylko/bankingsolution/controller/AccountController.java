@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.mdanylko.bankingsolution.dto.AccountDto;
-import org.mdanylko.bankingsolution.entity.Account;
 import org.mdanylko.bankingsolution.service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

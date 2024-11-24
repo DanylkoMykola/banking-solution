@@ -1,20 +1,23 @@
 package org.mdanylko.bankingsolution.service.impl;
 
-import org.mdanylko.bankingsolution.dto.TransactionDto;
+import org.mdanylko.bankingsolution.dto.SimpleTransactionDto;
+import org.mdanylko.bankingsolution.dto.TransactionResponseDto;
+import org.mdanylko.bankingsolution.dto.TransferTransactionDto;
 import org.mdanylko.bankingsolution.entity.Account;
 import org.mdanylko.bankingsolution.entity.Transaction;
+import org.mdanylko.bankingsolution.entity.enums.TransactionType;
 import org.mdanylko.bankingsolution.exception.InsufficientFoundsException;
 import org.mdanylko.bankingsolution.exception.NotFoundException;
 import org.mdanylko.bankingsolution.mapper.TransactionMapper;
 import org.mdanylko.bankingsolution.repository.AccountRepository;
 import org.mdanylko.bankingsolution.repository.TransactionRepository;
-import org.mdanylko.bankingsolution.util.TextConstants;
 import org.springframework.transaction.annotation.Transactional;
 import org.mdanylko.bankingsolution.service.TransactionService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.mdanylko.bankingsolution.util.TextConstants.ACCOUNT_NOT_FOUND;
 import static org.mdanylko.bankingsolution.util.TextConstants.INSUFFICIENT_FUNDS;
@@ -33,32 +36,54 @@ public class TransactionServiceImpl implements TransactionService {
         this.transactionMapper = transactionMapper;
     }
 
-    public TransactionDto deposit(TransactionDto transactionDto) {
-        Transaction transaction = transactionMapper.toEntity(transactionDto);
-        Account account = accountRepository.findByAccountNumber(transaction.getTransferAccount().getAccountNumber())
+    public TransactionResponseDto deposit(SimpleTransactionDto transactionDto) {
+        Account account = accountRepository.findByAccountNumber(transactionDto.getAccountNumber())
                 .orElseThrow(() -> new NotFoundException(ACCOUNT_NOT_FOUND));
-        BigDecimal newBalance = account.getBalance().add(transaction.getTransactionAmount());
-        account.setBalance(newBalance);
-        transaction.setTransferAccount(account);
+        account.addBalance(transactionDto.getAmount());
+
+        Transaction transaction = Transaction.builder()
+                .transactionAmount(transactionDto.getAmount())
+                .account(account)
+                .balance(account.getBalance())
+                .transactionType(TransactionType.DEPOSIT)
+                .transactionTimestamp(LocalDateTime.now())
+                .build();
         return transactionMapper.toDto(transactionRepository.save(transaction));
     }
 
-    public TransactionDto withdraw(TransactionDto transactionDto) {
-        Transaction transaction = transactionMapper.toEntity(transactionDto);
-        Account account = accountRepository.findByAccountNumber(transaction.getAccount().getAccountNumber())
+    public TransactionResponseDto withdraw(SimpleTransactionDto transactionDto) {
+        Account account = accountRepository.findByAccountNumber(transactionDto.getAccountNumber())
                 .orElseThrow(() -> new NotFoundException(ACCOUNT_NOT_FOUND));
-        if (account.getBalance().compareTo(transaction.getTransactionAmount()) < 0) {
-            throw new InsufficientFoundsException(INSUFFICIENT_FUNDS);
-        }
-        BigDecimal newBalance = account.getBalance().subtract(transaction.getTransactionAmount());
-        account.setBalance(newBalance);
-        transaction.setAccount(account);
+        account.subtractBalance(transactionDto.getAmount());
+
+        Transaction transaction = Transaction.builder()
+                .transactionAmount(transactionDto.getAmount())
+                .account(account)
+                .balance(account.getBalance())
+                .transactionType(TransactionType.WITHDRAWAL)
+                .transactionTimestamp(LocalDateTime.now())
+                .build();
         return transactionMapper.toDto(transactionRepository.save(transaction));
     }
 
-    public TransactionDto transfer(TransactionDto transactionDto) {
-        withdraw(transactionDto);
-        return deposit(transactionDto);
+    public TransactionResponseDto transfer(TransferTransactionDto transactionDto) {
+        Account account = accountRepository.findByAccountNumber(transactionDto.getAccountNumber())
+                .orElseThrow(() -> new NotFoundException(ACCOUNT_NOT_FOUND + " " + transactionDto.getAccountNumber()));
+        Account transferAccount = accountRepository.findByAccountNumber(transactionDto.getTransferAccountNumber())
+                .orElseThrow(() -> new NotFoundException(ACCOUNT_NOT_FOUND + " " + transactionDto.getTransferAccountNumber()));
+
+        account.subtractBalance(transactionDto.getAmount());
+        transferAccount.addBalance(transactionDto.getAmount());
+
+        Transaction transaction = Transaction.builder()
+                .transactionAmount(transactionDto.getAmount())
+                .account(account)
+                .transferAccount(transferAccount)
+                .balance(account.getBalance())
+                .transactionType(TransactionType.TRANSFER)
+                .transactionTimestamp(LocalDateTime.now())
+                .build();
+        return transactionMapper.toDto(transactionRepository.save(transaction));
     }
 }
 

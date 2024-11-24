@@ -14,9 +14,12 @@ import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.mdanylko.bankingsolution.exception.InsufficientFoundsException;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import static org.mdanylko.bankingsolution.util.TextConstants.INSUFFICIENT_FUNDS;
 
 @Getter
 @Setter
@@ -40,5 +43,16 @@ public class Account {
     public Account(String ownerName, BigDecimal initialBalance) {
         this.ownerName = ownerName;
         this.balance = initialBalance;
+    }
+
+    public void subtractBalance(BigDecimal amount) {
+        if (this.balance.compareTo(amount) < 0) {
+            throw new InsufficientFoundsException(INSUFFICIENT_FUNDS);
+        }
+        this.balance = this.balance.subtract(amount);
+    }
+
+    public void addBalance(BigDecimal amount) {
+        this.balance = this.balance.add(amount);
     }
 }

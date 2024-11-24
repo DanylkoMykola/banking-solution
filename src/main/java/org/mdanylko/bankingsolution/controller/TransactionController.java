@@ -1,14 +1,13 @@
 package org.mdanylko.bankingsolution.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.mdanylko.bankingsolution.dto.AccountDto;
-import org.mdanylko.bankingsolution.dto.TransactionDto;
-import org.mdanylko.bankingsolution.entity.Account;
+import org.mdanylko.bankingsolution.dto.SimpleTransactionDto;
+import org.mdanylko.bankingsolution.dto.TransactionResponseDto;
+import org.mdanylko.bankingsolution.dto.TransferTransactionDto;
 import org.mdanylko.bankingsolution.service.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/transactions")
@@ -36,8 +33,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "404", description = "Account not found")
     })
     @PostMapping("/deposit")
-    public ResponseEntity<TransactionDto> deposit(@Valid @RequestBody @Parameter(description = "Deposit details") TransactionDto transactionDto) {
-        transactionService.deposit(transactionDto);
+    public ResponseEntity<TransactionResponseDto> deposit(@Valid @RequestBody SimpleTransactionDto transactionDto) {
         return ResponseEntity.status(HttpStatus.OK).body(transactionService.deposit(transactionDto));
     }
 
@@ -48,7 +44,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "400", description = "Insufficient funds")
     })
     @PostMapping("/withdraw")
-    public ResponseEntity<TransactionDto> withdraw(@Valid @RequestBody @Parameter(description = "Withdrawal details") TransactionDto transactionDto) {
+    public ResponseEntity<TransactionResponseDto> withdraw(@Valid @RequestBody SimpleTransactionDto transactionDto) {
         return ResponseEntity.status(HttpStatus.OK).body(transactionService.withdraw(transactionDto));
     }
 
@@ -59,7 +55,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "400", description = "Insufficient funds")
     })
     @PostMapping("/transfer")
-    public ResponseEntity<TransactionDto> transfer(@Valid @RequestBody @Parameter(description = "Transfer details") TransactionDto transactionDto) {
+    public ResponseEntity<TransactionResponseDto> transfer(@Valid @RequestBody TransferTransactionDto transactionDto) {
         return ResponseEntity.status(HttpStatus.OK).body(transactionService.transfer(transactionDto));
     }
 }
