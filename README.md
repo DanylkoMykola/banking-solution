@@ -29,6 +29,9 @@ Clone the repository
 ```sh
 git clone https://github.com/DanylkoMykola/banking-solution.git
 ```
+```sh
+cd banking-solution
+```
 ### Build using Docker
 Build image
 ```
