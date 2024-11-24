@@ -40,7 +40,8 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transaction> transactions;
 
-    public Account(String ownerName, BigDecimal initialBalance) {
+    public Account(Long accountNumber, String ownerName, BigDecimal initialBalance) {
+        this.accountNumber = accountNumber;
         this.ownerName = ownerName;
         this.balance = initialBalance;
     }

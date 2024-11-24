@@ -6,7 +6,7 @@ COPY build.gradle settings.gradle gradlew ./
 COPY gradle ./gradle
 COPY src ./src
 
-RUN ./gradlew clean build -x test
+RUN ./gradlew clean build -x test jacocoTestReport
 
 FROM openjdk:21-jdk-slim
 

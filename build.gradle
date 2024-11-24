@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'jacoco'
 }
 
 group = 'org.mdanylko'
@@ -45,4 +46,28 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        html.outputLocation = file("${buildDir}/resources/static/test/html")
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.8
+            }
+        }
+    }
 }
