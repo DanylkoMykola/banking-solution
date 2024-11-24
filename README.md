@@ -28,7 +28,6 @@ Banking Solution is a Spring Boot application that provides basic banking functi
 Clone the repository
 ```sh
 git clone https://github.com/DanylkoMykola/banking-solution.git
-cd master
 ```
 ### Build using Docker
 Build image
