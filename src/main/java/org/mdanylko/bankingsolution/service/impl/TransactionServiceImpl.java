@@ -41,13 +41,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new NotFoundException(ACCOUNT_NOT_FOUND));
         account.addBalance(transactionDto.getAmount());
 
-        Transaction transaction = Transaction.builder()
-                .transactionAmount(transactionDto.getAmount())
-                .account(account)
-                .balance(account.getBalance())
-                .transactionType(TransactionType.DEPOSIT)
-                .transactionTimestamp(LocalDateTime.now())
-                .build();
+        Transaction transaction = buildTransaction(account, transactionDto.getAmount(), TransactionType.DEPOSIT);
         return transactionMapper.toDto(transactionRepository.save(transaction));
     }
 
@@ -56,13 +50,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new NotFoundException(ACCOUNT_NOT_FOUND));
         account.subtractBalance(transactionDto.getAmount());
 
-        Transaction transaction = Transaction.builder()
-                .transactionAmount(transactionDto.getAmount())
-                .account(account)
-                .balance(account.getBalance())
-                .transactionType(TransactionType.WITHDRAWAL)
-                .transactionTimestamp(LocalDateTime.now())
-                .build();
+        Transaction transaction =  buildTransaction(account, transactionDto.getAmount(), TransactionType.WITHDRAWAL);
         return transactionMapper.toDto(transactionRepository.save(transaction));
     }
 
@@ -75,15 +63,23 @@ public class TransactionServiceImpl implements TransactionService {
         account.subtractBalance(transactionDto.getAmount());
         transferAccount.addBalance(transactionDto.getAmount());
 
-        Transaction transaction = Transaction.builder()
-                .transactionAmount(transactionDto.getAmount())
+        Transaction transaction = buildTransaction(account, transactionDto.getAmount(), TransactionType.TRANSFER, transferAccount);
+        return transactionMapper.toDto(transactionRepository.save(transaction));
+    }
+
+    private Transaction buildTransaction(Account account, BigDecimal amount, TransactionType transactionType) {
+        return buildTransaction(account, amount, transactionType, null);
+    }
+
+    private Transaction buildTransaction(Account account, BigDecimal amount, TransactionType transactionType, Account transferAccount) {
+        return Transaction.builder()
+                .transactionAmount(amount)
                 .account(account)
                 .transferAccount(transferAccount)
                 .balance(account.getBalance())
-                .transactionType(TransactionType.TRANSFER)
+                .transactionType(transactionType)
                 .transactionTimestamp(LocalDateTime.now())
                 .build();
-        return transactionMapper.toDto(transactionRepository.save(transaction));
     }
 }
 
